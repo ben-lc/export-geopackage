@@ -1,6 +1,9 @@
 package fr.benlc.exportgeopackage
 
 import kotlinx.serialization.Serializable
+import org.geotools.filter.text.cql2.CQL
+import org.geotools.filter.text.cql2.CQLException
+import picocli.CommandLine.TypeConversionException
 
 @Serializable
 data class ExportConfig(val datasource: DatasourceConfig, val contents: Set<ContentConfig>) {
@@ -11,10 +14,18 @@ data class ExportConfig(val datasource: DatasourceConfig, val contents: Set<Cont
       val host: String,
       val port: Int = 5432,
       val schema: String,
-      val database: String? = null,
+      val database: String,
       val user: String,
       val password: String
-  )
+  ) {
+    init {
+      require(dbtype.isNotEmpty()) { "dbtype cannot be empty" }
+      require(host.isNotEmpty()) { "host cannot be empty" }
+      require(schema.isNotEmpty()) { "schema cannot be empty" }
+      require(database.isNotEmpty()) { "schema cannot be empty" }
+      require(user.isNotEmpty()) { "user cannot be empty" }
+    }
+  }
 
   @Serializable
   data class ContentConfig(val sourceConfig: SourceConfig, val geopackageConfig: GeopackageConfig)
@@ -23,13 +34,23 @@ data class ExportConfig(val datasource: DatasourceConfig, val contents: Set<Cont
   data class SourceConfig(
       val tableName: String,
       val columns: Set<String>? = null,
-      val filter: String = ""
-  )
+      val filter: String = "",
+      val maxFeatures: Int? = null
+  ) {
+    init {
+      require(tableName.isNotEmpty()) { "tableName cannot be empty" }
+
+      try {
+        if (filter.isNotBlank()) CQL.toFilter(filter)
+      } catch (e: CQLException) {
+        throw TypeConversionException("property <filter> is invalid : ${e.message}")
+      }
+    }
+  }
 
   @Serializable
   data class GeopackageConfig(
-      val tableName: String,
-      val identifier: String,
+      val identifier: String? = null,
       val srid: Int,
       val description: String? = null
   )

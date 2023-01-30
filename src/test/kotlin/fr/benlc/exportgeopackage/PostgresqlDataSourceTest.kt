@@ -2,7 +2,7 @@ package fr.benlc.exportgeopackage
 
 import fr.benlc.exportgeopackage.ExportConfig.ContentConfig
 import fr.benlc.exportgeopackage.ExportConfig.DatasourceConfig
-import org.assertj.core.api.Assertions.*
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
@@ -10,13 +10,13 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
 
 @Testcontainers
-class DataSourceTest {
+class PostgresqlDataSourceTest {
 
   companion object {
     @Container
     private val postgresqlContainer =
         PostgreSQLContainer(
-                DockerImageName.parse("postgis/postgis:15-3.3")
+                DockerImageName.parse("postgis/postgis:15-3.3-alpine")
                     .asCompatibleSubstituteFor("postgres"))
             .withDatabaseName("db_test")
             .withUsername("mulder")
@@ -37,15 +37,16 @@ class DataSourceTest {
                 schema = "test"),
             setOf(
                 ContentConfig(
-                    ExportConfig.SourceConfig("data", setOf("name", "geom")),
-                    ExportConfig.GeopackageConfig("test", "toto", 3615))))
+                    ExportConfig.SourceConfig(
+                        tableName = "first_table", columns = setOf("name", "geom")),
+                    ExportConfig.GeopackageConfig(identifier = "toto", srid = 3615))))
     val actualFeatures = DataSource(config).fetchFeatures()
 
     val actualFirstFeature = actualFeatures.values.iterator().next().features().next()
 
-    assertThat(actualFirstFeature.getAttribute("name")).isEqualTo("first one")
-    assertThat(actualFirstFeature.getAttribute("geom").toString())
-        .isEqualTo(
-            "POLYGON ((2.8649250704196603 46.249541520322815, 2.5362135416546447 45.45677308207745, 3.9751080142987703 45.44827211286614, 2.8649250704196603 46.249541520322815))")
+    assertEquals("first one first table", actualFirstFeature.getAttribute("name"))
+    assertEquals(
+        "POLYGON ((2.8649250704196603 46.249541520322815, 2.5362135416546447 45.45677308207745, 3.9751080142987703 45.44827211286614, 2.8649250704196603 46.249541520322815))",
+        actualFirstFeature.getAttribute("geom").toString())
   }
 }

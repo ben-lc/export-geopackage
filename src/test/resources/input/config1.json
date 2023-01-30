@@ -1,0 +1,35 @@
+{
+  "datasource": {
+    "host": "dadb",
+    "port": 666,
+    "schema": "test",
+    "database": "db_test",
+    "user": "mulder",
+    "password": "trustN01"
+  },
+  "contents": [
+    {
+      "sourceConfig": {
+        "tableName": "first_table",
+        "columns": ["id", "name", "geom"],
+        "filter": "id = 2"
+      },
+      "geopackageConfig": {
+        "identifier": "42",
+        "srid": 4326,
+        "description": "some great data"
+      }
+    },
+    {
+      "sourceConfig": {
+        "tableName": "second_table",
+        "columns": ["id", "description", "geom"]
+      },
+      "geopackageConfig": {
+        "identifier": "rincevant",
+        "srid": 4326,
+        "description": "another great table"
+      }
+    }
+  ]
+}

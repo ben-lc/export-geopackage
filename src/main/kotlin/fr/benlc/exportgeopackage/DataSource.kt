@@ -36,8 +36,10 @@ class DataSource(config: ExportConfig) {
             if (it.sourceConfig.filter.isNotBlank()) CQL.toFilter(it.sourceConfig.filter)
             else Filter.INCLUDE
         val properties = it.sourceConfig.columns?.toTypedArray() ?: Query.ALL_NAMES
-        val query = Query(it.sourceConfig.tableName, filter, *properties)
+        val maxFeatures = it.sourceConfig.maxFeatures ?: Query.DEFAULT_MAX
+        val query = Query(it.sourceConfig.tableName, filter, maxFeatures, properties, null)
         val features = source.getFeatures(query)
-        Pair(getFeatureEntry(it.geopackageConfig), features)
+        fixAttributeNativeTypes(features.schema)
+        Pair(buildFeatureEntry(it.geopackageConfig), features)
       }
 }
