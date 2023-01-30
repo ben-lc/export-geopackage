@@ -1,12 +1,17 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.7.20"
-  kotlin("kapt") version "1.7.20"
-  kotlin("plugin.serialization") version "1.7.20"
-  id("com.diffplug.spotless") version "6.11.0"
-  id("com.github.ben-manes.versions") version "0.43.0"
-  id("pl.allegro.tech.build.axion-release") version "1.14.2"
+  kotlin("jvm") version "1.8.0"
+  kotlin("kapt") version "1.8.0"
+  kotlin("plugin.serialization") version "1.8.0"
+  id("com.diffplug.spotless") version "6.13.0"
+  id("com.github.ben-manes.versions") version "0.44.0"
+  id("pl.allegro.tech.build.axion-release") version "1.14.3"
+}
+
+tasks.wrapper {
+  distributionType = Wrapper.DistributionType.ALL
+  version = "7.6"
 }
 
 group = "fr.benlc"
