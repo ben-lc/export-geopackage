@@ -1,10 +1,9 @@
 package fr.benlc.exportgeopackage
 
+import kotlin.test.assertEquals
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-
 
 class ExportConfigTest {
 
@@ -24,26 +23,24 @@ class ExportConfigTest {
               },
               "contents": [
                 {
-                  "sourceConfig": {
+                  "source": {
                     "tableName": "first_table",
                     "columns": ["col1", "col2"],
                     "filter": "col1='toto'"
                   },
-                  "geopackageConfig": {
-                    "tableName": "da_table",
+                  "geopackage": {
                     "identifier": "42",
                     "srid": 3615,
                     "description": "some great data"
                   }
                 },
                 {
-                  "sourceConfig": {
+                  "source": {
                     "tableName": "second_table",
                     "columns": ["cola", "colb"],
                     "filter": "cola='bar'"
                   },
-                  "geopackageConfig": {
-                    "tableName": "da_other_table",
+                  "geopackage": {
                     "identifier": "xzf",
                     "srid": 3617,
                     "description": "another great table"
@@ -51,7 +48,8 @@ class ExportConfigTest {
                 }
               ]
             }
-        """.trimIndent()
+        """
+            .trimIndent()
 
     val expected =
         ExportConfig(
@@ -60,13 +58,11 @@ class ExportConfigTest {
             setOf(
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig("first_table", setOf("col1", "col2"), "col1='toto'"),
-                    ExportConfig.GeopackageConfig("da_table", "42", 3615, "some great data")),
+                    ExportConfig.GeopackageConfig("42", 3615, "some great data")),
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig("second_table", setOf("cola", "colb"), "cola='bar'"),
-                    ExportConfig.GeopackageConfig("da_other_table", "xzf", 3617, "another great table")
-                )
-            ))
+                    ExportConfig.GeopackageConfig("xzf", 3617, "another great table"))))
 
-    assertThat(Json.decodeFromString<ExportConfig>(configJson)).isEqualTo(expected)
+    assertEquals(expected, Json.decodeFromString(configJson))
   }
 }

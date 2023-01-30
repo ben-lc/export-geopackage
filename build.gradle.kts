@@ -23,25 +23,33 @@ repositories {
   mavenCentral()
 }
 
-extra["geotoolsVersion"] = "28-RC"
+extra["geotoolsVersion"] = "28.1"
 
 extra["picocliVersion"] = "4.7.0"
 
-extra["testcontainersVersion"] = "1.17.5"
+extra["testcontainersVersion"] = "1.17.6"
+
+extra["junitVersion"] = "5.9.2"
+
+extra["kotlinxSerializationJsonVersion"] = "1.4.1"
+
+extra["mockkVersion"] = "1.13.3"
 
 dependencies {
   implementation("info.picocli:picocli:${property("picocliVersion")}")
   kapt("info.picocli:picocli-codegen:${property("picocliVersion")}")
   implementation("org.geotools.jdbc:gt-jdbc-postgis:${property("geotoolsVersion")}")
+  implementation("org.geotools:gt-epsg-hsql:${property("geotoolsVersion")}")
   implementation("org.geotools:gt-geopkg:${property("geotoolsVersion")}")
   implementation("org.geotools:gt-cql:${property("geotoolsVersion")}")
-  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+  implementation(
+      "org.jetbrains.kotlinx:kotlinx-serialization-json:${property("kotlinxSerializationJsonVersion")}")
   testImplementation(kotlin("test"))
-  testImplementation(platform("org.junit:junit-bom:5.9.1"))
+  testImplementation(platform("org.junit:junit-bom:${property("junitVersion")}"))
   testImplementation("org.junit.jupiter:junit-jupiter")
-  testImplementation("org.assertj:assertj-core:3.23.1")
   testImplementation("org.testcontainers:junit-jupiter:${property("testcontainersVersion")}")
   testImplementation("org.testcontainers:postgresql:${property("testcontainersVersion")}")
+  testImplementation("io.mockk:mockk:${property("mockkVersion")}")
 }
 
 tasks.test { useJUnitPlatform() }

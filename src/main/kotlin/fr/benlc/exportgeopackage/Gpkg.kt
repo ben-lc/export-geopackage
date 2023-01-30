@@ -1,25 +1,38 @@
 package fr.benlc.exportgeopackage
 
+import fr.benlc.exportgeopackage.picocli.ExportConfigConverter
 import java.io.File
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
-import picocli.CommandLine.Option
-import picocli.CommandLine.Parameters
+import java.util.concurrent.Callable
+import kotlin.system.exitProcess
+import picocli.CommandLine
+import picocli.CommandLine.*
 
-class Gpkg : Runnable {
+@Command(
+    name = "gpkg",
+    description = ["gpkg is an utility that creates GeoPackage from database spatial data."],
+    mixinStandardHelpOptions = true,
+    version = ["0.1"])
+class Gpkg : Callable<Int> {
 
-  @Option(names = ["-c", "--config"], description = ["Path to the configuration file"])
-  var configFile: File = File("config.json")
+  @Parameters(description = ["The GeoPackage output file"], paramLabel = "FILE")
+  lateinit var savePath: String
 
-  @Option(names = ["-h", "--help"], usageHelp = true, description = ["display a help message"])
-  var helpRequested: Boolean = false
+  @Parameters(
+      description = ["JSON file containing export configuration"],
+      paramLabel = "JSON",
+      converter = [ExportConfigConverter::class])
+  lateinit var config: ExportConfig
 
-  @Parameters lateinit var savePath: String
+  @Spec lateinit var spec: Model.CommandSpec
 
-  override fun run() {
-    val config = Json.decodeFromString<ExportConfig>(configFile.readText())
+  override fun call(): Int {
     val dataSource = DataSource(config)
     val geoPkg = createGeoPackage(dataSource.fetchFeatures())
     geoPkg.file.copyTo(File(savePath), true)
+    spec.commandLine().out.println("Done.")
+    return 0
+  }
+  fun main(args: Array<String>) {
+    exitProcess(CommandLine(Gpkg()).execute(*args))
   }
 }

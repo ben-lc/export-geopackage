@@ -31,13 +31,14 @@ class DataSource(config: ExportConfig) {
 
   fun fetchFeatures(): Map<FeatureEntry, SimpleFeatureCollection> =
       config.contents.associate {
-        val source = dataStore.getFeatureSource(it.sourceConfig.tableName)
+        val source = dataStore.getFeatureSource(it.source.tableName)
         val filter =
-            if (it.sourceConfig.filter.isNotBlank()) CQL.toFilter(it.sourceConfig.filter)
-            else Filter.INCLUDE
-        val properties = it.sourceConfig.columns?.toTypedArray() ?: Query.ALL_NAMES
-        val query = Query(it.sourceConfig.tableName, filter, *properties)
+            if (it.source.filter.isNotBlank()) CQL.toFilter(it.source.filter) else Filter.INCLUDE
+        val properties = it.source.columns?.toTypedArray() ?: Query.ALL_NAMES
+        val maxFeatures = it.source.maxFeatures ?: Query.DEFAULT_MAX
+        val query = Query(it.source.tableName, filter, maxFeatures, properties, null)
         val features = source.getFeatures(query)
-        Pair(getFeatureEntry(it.geopackageConfig), features)
+        fixAttributeNativeTypes(features.schema)
+        Pair(buildFeatureEntry(it.geopackage), features)
       }
 }
