@@ -32,7 +32,11 @@ class Gpkg : Callable<Int> {
     spec.commandLine().out.println("Done.")
     return 0
   }
-  fun main(args: Array<String>) {
-    exitProcess(CommandLine(Gpkg()).execute(*args))
+
+  companion object {
+    @JvmStatic
+    fun main(args: Array<String>) {
+      exitProcess(CommandLine(Gpkg()).execute(*args))
+    }
   }
 }
