@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -7,7 +8,11 @@ plugins {
   id("com.diffplug.spotless") version "6.13.0"
   id("com.github.ben-manes.versions") version "0.44.0"
   id("pl.allegro.tech.build.axion-release") version "1.14.3"
+  application
+  id("com.github.johnrengelman.shadow") version ("7.1.2")
 }
+
+application { mainClass.set("fr.benlc.exportgeopackage.Gpkg") }
 
 tasks.wrapper {
   distributionType = Wrapper.DistributionType.ALL
@@ -65,3 +70,11 @@ spotless {
 }
 
 kapt { arguments { arg("project", "${project.group}/${project.name}") } }
+
+tasks.named<ShadowJar>("shadowJar").configure {
+  minimize {
+    exclude(dependency("org.geotools.jdbc:gt-jdbc-postgis:.*"))
+    exclude(dependency("org.geotools:gt-epsg-hsql:.*"))
+    exclude(dependency("org.geotools:gt-geopkg:.*"))
+  }
+}
