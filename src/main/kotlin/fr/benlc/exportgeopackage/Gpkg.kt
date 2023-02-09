@@ -4,8 +4,11 @@ import fr.benlc.exportgeopackage.picocli.ExportConfigConverter
 import java.io.File
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
+import mu.KotlinLogging
 import picocli.CommandLine
 import picocli.CommandLine.*
+
+private val logger = KotlinLogging.logger {}
 
 @Command(
     name = "gpkg",
@@ -13,6 +16,9 @@ import picocli.CommandLine.*
     mixinStandardHelpOptions = true,
     version = ["0.1"])
 class Gpkg : Callable<Int> {
+
+  @Option(names = ["-v", "--verbose"], description = ["Verbose mode. Helpful for troubleshooting."])
+  var verboseMode: Boolean = false
 
   @Parameters(description = ["The GeoPackage output file"], paramLabel = "FILE")
   lateinit var savePath: String
@@ -26,11 +32,18 @@ class Gpkg : Callable<Int> {
   @Spec lateinit var spec: Model.CommandSpec
 
   override fun call(): Int {
-    val dataSource = DataSource(config)
-    val geoPkg = createGeoPackage(dataSource.fetchFeatures())
-    geoPkg.file.copyTo(File(savePath), true)
-    spec.commandLine().out.println("Done.")
-    return 0
+    configureLogger(verboseMode)
+    return try {
+      val dataSource = DataSource(config)
+      val geoPkg = createGeoPackage(dataSource.fetchFeatures())
+      geoPkg.file.copyTo(File(savePath), true)
+      logger.info { "Export finished." }
+      0
+    } catch (e: Exception) {
+      if (verboseMode) logger.error(e) { e.message } else logger.error { e.message }
+      logger.error { "Export failed." }
+      1
+    }
   }
 
   companion object {
