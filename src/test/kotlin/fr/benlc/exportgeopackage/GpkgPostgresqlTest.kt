@@ -4,8 +4,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.SpyK
 import io.mockk.junit5.MockKExtension
 import java.io.File
-import java.io.PrintWriter
-import java.io.StringWriter
 import kotlin.test.assertEquals
 import org.geotools.geometry.jts.Geometries
 import org.geotools.geopkg.Entry
@@ -71,14 +69,11 @@ class GpkgPostgresqlTest {
     every { gpkg.config } returns config
 
     val cmd = CommandLine(gpkg)
-    val sw = StringWriter()
-    cmd.out = PrintWriter(sw)
 
     val exitCode =
         cmd.execute("src/test/resources/output/test.gpkg", "src/test/resources/input/config1.json")
 
     assertEquals(0, exitCode)
-    assertEquals("Done.\n", sw.toString())
     assertEquals("src/test/resources/output/test.gpkg", gpkg.savePath)
 
     val gpkg = GeoPackage(File("src/test/resources/output/test.gpkg"))

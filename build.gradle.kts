@@ -40,6 +40,10 @@ extra["kotlinxSerializationJsonVersion"] = "1.4.1"
 
 extra["mockkVersion"] = "1.13.3"
 
+extra["kotlinLoggingVersion"] = "3.0.4"
+
+extra["logbackVersion"] = "1.4.5"
+
 dependencies {
   implementation("info.picocli:picocli:${property("picocliVersion")}")
   kapt("info.picocli:picocli-codegen:${property("picocliVersion")}")
@@ -49,6 +53,8 @@ dependencies {
   implementation("org.geotools:gt-cql:${property("geotoolsVersion")}")
   implementation(
       "org.jetbrains.kotlinx:kotlinx-serialization-json:${property("kotlinxSerializationJsonVersion")}")
+  implementation("io.github.microutils:kotlin-logging-jvm:${property("kotlinLoggingVersion")}")
+  implementation("ch.qos.logback:logback-classic:${property("logbackVersion")}")
   testImplementation(kotlin("test"))
   testImplementation(platform("org.junit:junit-bom:${property("junitVersion")}"))
   testImplementation("org.junit.jupiter:junit-jupiter")
@@ -76,5 +82,6 @@ tasks.named<ShadowJar>("shadowJar").configure {
     exclude(dependency("org.geotools.jdbc:gt-jdbc-postgis:.*"))
     exclude(dependency("org.geotools:gt-epsg-hsql:.*"))
     exclude(dependency("org.geotools:gt-geopkg:.*"))
+    exclude(dependency("ch.qos.logback:logback-classic:.*"))
   }
 }

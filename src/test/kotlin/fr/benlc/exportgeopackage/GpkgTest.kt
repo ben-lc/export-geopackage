@@ -17,11 +17,12 @@ class GpkgTest {
     cmd.out = PrintWriter(sw)
 
     val expected =
-        """Usage: gpkg [-hV] FILE JSON
+        """Usage: gpkg [-hvV] FILE JSON
 gpkg is an utility that creates GeoPackage from database spatial data.
       FILE        The GeoPackage output file
       JSON        JSON file containing export configuration
   -h, --help      Show this help message and exit.
+  -v, --verbose   Verbose mode. Helpful for troubleshooting.
   -V, --version   Print version information and exit."""
             .trimIndent()
 
