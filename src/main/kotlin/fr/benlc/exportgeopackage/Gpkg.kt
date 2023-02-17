@@ -24,7 +24,36 @@ class Gpkg : Callable<Int> {
   lateinit var savePath: String
 
   @Parameters(
-      description = ["JSON file containing export configuration"],
+      description =
+          [
+              """
+JSON file containing export configuration :
+{
+  "datasource": {            /* source database configuration, all properties are required */
+    "host": "that.host",  
+    "port": 5432,
+    "database": "that_db",
+    "schema": "that_schema",
+    "user": "mkeal",  
+    "password": "azerty"  
+  },
+  "contents": [
+    {
+      "source": {                      /* configuration of source data to export*/
+        "tableName": "that_table",     /* (*) name of the table containing features to export */
+        "columns": ["height", "geom"], /* (*) list of the column names to export, must contain a geometry column */
+        "filter": "height > 10",       /* filter query */
+        "maxFeatures": 50              /* maximum number of features to export */
+      },
+      "geopackage": {                  /* configuration of geopackage data */
+        "identifier": "stuff"          
+        "srid": 4326,              
+        "description": "so much stuff"      
+      }
+    }
+  ]
+}
+"""],
       paramLabel = "JSON",
       converter = [ExportConfigConverter::class])
   lateinit var config: ExportConfig

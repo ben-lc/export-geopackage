@@ -1,0 +1,12 @@
+= export-geopackage
+
+A basic CLI tool used to export spatial data into geopackage.
+
+== Supported data source
+
+* PostgreSQL / Postgis (basic indeed)
+
+== Usage
+
+include::gpkg.adoc
+
