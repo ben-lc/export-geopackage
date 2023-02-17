@@ -47,6 +47,7 @@ extra["logbackVersion"] = "1.4.5"
 dependencies {
   implementation("info.picocli:picocli:${property("picocliVersion")}")
   kapt("info.picocli:picocli-codegen:${property("picocliVersion")}")
+  compileOnly("info.picocli:picocli-codegen:${property("picocliVersion")}")
   implementation("org.geotools.jdbc:gt-jdbc-postgis:${property("geotoolsVersion")}")
   implementation("org.geotools:gt-epsg-hsql:${property("geotoolsVersion")}")
   implementation("org.geotools:gt-geopkg:${property("geotoolsVersion")}")
@@ -84,4 +85,16 @@ tasks.named<ShadowJar>("shadowJar").configure {
     exclude(dependency("org.geotools:gt-geopkg:.*"))
     exclude(dependency("ch.qos.logback:logback-classic:.*"))
   }
+}
+
+tasks.register<JavaExec>("generateManpageAsciiDoc").configure {
+  dependsOn("classes")
+  group = "Documentation"
+  description = "Generate AsciiDoc manpage"
+  classpath(
+      configurations.compileClasspath,
+      configurations.annotationProcessor,
+      sourceSets["main"].runtimeClasspath)
+  main = "picocli.codegen.docgen.manpage.ManPageGenerator"
+  args("fr.benlc.exportgeopackage.Gpkg", "--outdir=${project.projectDir}", "-v")
 }
