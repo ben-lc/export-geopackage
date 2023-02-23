@@ -12,7 +12,7 @@ private val logger = KotlinLogging.logger {}
 
 @Command(
     name = "gpkg",
-    description = ["gpkg is an utility that creates GeoPackage from database spatial data."],
+    description = ["gpkg is a basic CLI tool used to export spatial data into geopackage."],
     mixinStandardHelpOptions = true,
     version = ["0.1"])
 class Gpkg : Callable<Int> {
@@ -20,11 +20,13 @@ class Gpkg : Callable<Int> {
   @Option(names = ["-v", "--verbose"], description = ["Verbose mode. Helpful for troubleshooting."])
   var verboseMode: Boolean = false
 
-  @Parameters(description = ["The GeoPackage output file"], paramLabel = "FILE")
+  @Parameters(description = ["The GeoPackage output file."], paramLabel = "FILE")
   lateinit var savePath: String
 
   @Parameters(
-      description = ["JSON file containing export configuration"],
+      description =
+          [
+              "JSON file containing export configuration (see https://github.com/ben-lc/export-geopackage/README.adoc)."],
       paramLabel = "JSON",
       converter = [ExportConfigConverter::class])
   lateinit var config: ExportConfig
