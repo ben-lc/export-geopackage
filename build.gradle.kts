@@ -2,14 +2,15 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.8.0"
-  kotlin("kapt") version "1.8.0"
-  kotlin("plugin.serialization") version "1.8.0"
-  id("com.diffplug.spotless") version "6.13.0"
-  id("com.github.ben-manes.versions") version "0.44.0"
-  id("pl.allegro.tech.build.axion-release") version "1.14.3"
+  kotlin("jvm") version "1.8.10"
+  kotlin("kapt") version "1.8.10"
+  kotlin("plugin.serialization") version "1.8.10"
+  id("com.diffplug.spotless") version "6.15.0"
+  id("com.github.ben-manes.versions") version "0.46.0"
+  id("pl.allegro.tech.build.axion-release") version "1.14.4"
   application
   id("com.github.johnrengelman.shadow") version ("7.1.2")
+  id("org.graalvm.buildtools.native") version ("0.9.20")
 }
 
 application { mainClass.set("fr.benlc.exportgeopackage.Gpkg") }
@@ -28,9 +29,9 @@ repositories {
   mavenCentral()
 }
 
-extra["geotoolsVersion"] = "28.1"
+extra["geotoolsVersion"] = "28.2"
 
-extra["picocliVersion"] = "4.7.0"
+extra["picocliVersion"] = "4.7.1"
 
 extra["testcontainersVersion"] = "1.17.6"
 
@@ -38,7 +39,7 @@ extra["junitVersion"] = "5.9.2"
 
 extra["kotlinxSerializationJsonVersion"] = "1.4.1"
 
-extra["mockkVersion"] = "1.13.3"
+extra["mockkVersion"] = "1.13.4"
 
 extra["kotlinLoggingVersion"] = "3.0.4"
 
