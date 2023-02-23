@@ -18,9 +18,10 @@ class GpkgTest {
 
     val expected =
         """Usage: gpkg [-hvV] FILE JSON
-gpkg is an utility that creates GeoPackage from database spatial data.
-      FILE        The GeoPackage output file
-      JSON        JSON file containing export configuration
+gpkg is a basic CLI tool used to export spatial data into geopackage.
+      FILE        The GeoPackage output file.
+      JSON        JSON file containing export configuration (see https://github.
+                    com/ben-lc/export-geopackage/README.adoc).
   -h, --help      Show this help message and exit.
   -v, --verbose   Verbose mode. Helpful for troubleshooting.
   -V, --version   Print version information and exit."""

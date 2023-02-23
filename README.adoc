@@ -1,0 +1,119 @@
+= export-geopackage
+
+A basic CLI tool used to export spatial data to geopackage.
+
+== Supported data source
+
+* PostgreSQL / Postgis (basic indeed)
+
+== Run
+
+=== From jar (windows / linux / mac)
+
+1. Install java 17+
+
+2. Download jar file
+
+3. Open a terminal and run `java -jar gpkg.jar -h`
+
+== Usage
+
+See https://github.com/ben-lc/export-geopackage/blob/feat/add-documentation/gpkg.adoc[man page]
+
+== JSON configuration file
+
+.JSON properties
+[cols="1,2a,2,1"]
+|===
+| property | type | description | required
+
+| datasource
+| object
+[cols="1,1,1,1"]
+!===
+! property ! type ! description ! required
+
+! host ! string ! database server host name ! true
+! port ! string ! database server port ! true
+! database ! string ! database name ! true
+! schema ! string ! database schema ! true
+! user ! string ! database user ! true
+! password ! string ! database password ! true
+!===
+| source database configuration
+| true
+| contents
+| Array<object>
+[cols="1,2,2,1"]
+!===
+! property ! type ! description ! required
+
+! source ! object (see below) ! source data properties ! true
+! geopackage ! object (see below) ! geopackage data properties ! true
+!===
+| configuration of data to export
+| true
+|===
+
+.contents.source properties
+[cols="1,2,2,1"]
+|===
+| property | type | description | required
+
+| tableName | string | table containing data to export | true
+| columns | Array<string> | list of columns to export (must contain a column with spatial data) | true
+| filter | string | filter | false
+| maxFeatures | number | maximum number of features to export | false
+|===
+
+.contents.geopackage properties
+[cols="1,2,2,1"]
+|===
+| property | type | description | required
+
+| identifier | string | identifier of geopackage content | false
+| description | string | description of geopackage content | false
+| srid | Array<string> | srid of spatial data | true
+|===
+
+.Sample json
+[source,json]
+----
+{
+  "datasource": {
+    "host": "that.host",
+    "port": 5432,
+    "database": "that_db",
+    "schema": "that_schema",
+    "user": "mkeal",
+    "password": "azerty"
+  },
+  "contents": [
+    {
+      "source": {
+        "tableName": "that_table",
+        "columns": ["height", "geom"],
+        "filter": "height > 10",
+        "maxFeatures": 50
+      },
+      "geopackage": {
+        "identifier": "stuff",
+        "srid": 4326,
+        "description": "so much stuff"
+      }
+    },
+    {
+      "source": {
+        "tableName": "that_other_table",
+        "columns": ["size", "name","geom"],
+        "filter": "size = 42"
+      },
+      "geopackage": {
+        "identifier": "another stuff",
+        "srid": 4326,
+        "description": "so much other stuff"
+      }
+    }
+  ]
+}
+----

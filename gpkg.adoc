@@ -1,0 +1,67 @@
+// tag::picocli-generated-full-manpage[]
+// tag::picocli-generated-man-section-header[]
+:doctype: manpage
+:revnumber: 0.1
+:manmanual: Gpkg Manual
+:mansource: 0.1
+:man-linkstyle: pass:[blue R < >]
+= gpkg(1)
+
+// end::picocli-generated-man-section-header[]
+
+// tag::picocli-generated-man-section-name[]
+== Name
+
+gpkg - gpkg is a basic CLI tool used to export spatial data into geopackage.
+
+// end::picocli-generated-man-section-name[]
+
+// tag::picocli-generated-man-section-synopsis[]
+== Synopsis
+
+*gpkg* [*-hvV*] _FILE_ _JSON_
+
+// end::picocli-generated-man-section-synopsis[]
+
+// tag::picocli-generated-man-section-description[]
+== Description
+
+gpkg is a basic CLI tool used to export spatial data into geopackage.
+
+// end::picocli-generated-man-section-description[]
+
+// tag::picocli-generated-man-section-options[]
+== Options
+
+*-h*, *--help*::
+  Show this help message and exit.
+
+*-v*, *--verbose*::
+  Verbose mode. Helpful for troubleshooting.
+
+*-V*, *--version*::
+  Print version information and exit.
+
+// end::picocli-generated-man-section-options[]
+
+// tag::picocli-generated-man-section-arguments[]
+== Arguments
+
+_FILE_::
+  The GeoPackage output file.
+
+_JSON_::
+  JSON file containing export configuration (see https://github.com/ben-lc/export-geopackage/README.adoc).
+
+// end::picocli-generated-man-section-arguments[]
+
+// tag::picocli-generated-man-section-commands[]
+// end::picocli-generated-man-section-commands[]
+
+// tag::picocli-generated-man-section-exit-status[]
+// end::picocli-generated-man-section-exit-status[]
+
+// tag::picocli-generated-man-section-footer[]
+// end::picocli-generated-man-section-footer[]
+
+// end::picocli-generated-full-manpage[]
