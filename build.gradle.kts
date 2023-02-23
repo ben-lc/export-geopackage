@@ -17,7 +17,7 @@ application { mainClass.set("fr.benlc.exportgeopackage.Gpkg") }
 
 tasks.wrapper {
   distributionType = Wrapper.DistributionType.ALL
-  version = "7.6"
+  gradleVersion = "8.0.1"
 }
 
 group = "fr.benlc"
@@ -69,6 +69,13 @@ tasks.test { useJUnitPlatform() }
 
 tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "17" }
 
+java {
+  toolchain {
+    languageVersion.set(JavaLanguageVersion.of(17))
+    vendor.set(JvmVendorSpec.GRAAL_VM)
+  }
+}
+
 spotless {
   kotlin { ktfmt() }
   kotlinGradle {
@@ -96,6 +103,6 @@ tasks.register<JavaExec>("generateManpageAsciiDoc").configure {
       configurations.compileClasspath,
       configurations.annotationProcessor,
       sourceSets["main"].runtimeClasspath)
-  main = "picocli.codegen.docgen.manpage.ManPageGenerator"
+  mainClass.set("picocli.codegen.docgen.manpage.ManPageGenerator")
   args("fr.benlc.exportgeopackage.Gpkg", "--outdir=${project.projectDir}", "-v")
 }
