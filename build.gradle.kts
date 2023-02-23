@@ -76,6 +76,8 @@ java {
   }
 }
 
+graalvmNative { metadataRepository { enabled.set(true) } }
+
 spotless {
   kotlin { ktfmt() }
   kotlinGradle {
