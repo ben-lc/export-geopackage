@@ -52,7 +52,8 @@ class GpkgPostgresqlTest {
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig(
                         tableName = "first_table",
-                        columns = setOf("first_table_id", "name", "geom"),
+                        columns =
+                            setOf("first_table_id", "name", "some_bigint", "some_numeric", "geom"),
                         filter = "first_table_id = 2"),
                     ExportConfig.GeopackageConfig(
                         description = "some great data", identifier = "42", srid = 4326)),

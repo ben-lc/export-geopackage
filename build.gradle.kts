@@ -92,6 +92,7 @@ spotless {
 kapt { arguments { arg("project", "${project.group}/${project.name}") } }
 
 tasks.named<ShadowJar>("shadowJar").configure {
+  mergeServiceFiles()
   minimize {
     exclude(dependency("org.geotools.jdbc:gt-jdbc-postgis:.*"))
     exclude(dependency("org.geotools:gt-epsg-hsql:.*"))
