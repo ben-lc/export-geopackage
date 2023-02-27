@@ -25,14 +25,14 @@ class ExportConfigConverterTest {
                         columns = setOf("id", "name", "geom"),
                         filter = "id = 2"),
                     ExportConfig.GeopackageConfig(
-                        description = "some great data", identifier = "42", srid = 4326)),
+                        description = "some great data", identifier = "42", crs = "EPSG:2154")),
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig(
                         tableName = "second_table", columns = setOf("id", "description", "geom")),
                     ExportConfig.GeopackageConfig(
                         description = "another great table",
                         identifier = "rincevant",
-                        srid = 4326))))
+                        crs = "EPSG:4326"))))
 
     val actual = ExportConfigConverter().convert("src/test/resources/input/config1.json")
 

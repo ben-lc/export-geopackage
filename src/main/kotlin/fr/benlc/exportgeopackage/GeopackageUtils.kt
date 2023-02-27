@@ -25,7 +25,6 @@ fun buildFeatureEntry(geopkgConfig: ExportConfig.GeopackageConfig) =
       dataType = Entry.DataType.Feature
       description = geopkgConfig.description
       identifier = geopkgConfig.identifier
-      srid = geopkgConfig.srid
     }
 
 /**

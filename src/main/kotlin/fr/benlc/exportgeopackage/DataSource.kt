@@ -6,6 +6,7 @@ import org.geotools.data.Query
 import org.geotools.data.simple.SimpleFeatureCollection
 import org.geotools.filter.text.cql2.CQL
 import org.geotools.geopkg.FeatureEntry
+import org.geotools.referencing.CRS
 import org.opengis.filter.Filter
 
 class DataSource(config: ExportConfig) {
@@ -37,6 +38,11 @@ class DataSource(config: ExportConfig) {
         val properties = it.source.columns?.toTypedArray() ?: Query.ALL_NAMES
         val maxFeatures = it.source.maxFeatures ?: Query.DEFAULT_MAX
         val query = Query(it.source.tableName, filter, maxFeatures, properties, null)
+
+        if (!it.geopackage.crs.isNullOrBlank()) {
+          query.coordinateSystemReproject = CRS.decode(it.geopackage.crs)
+        }
+
         val features = source.getFeatures(query)
         fixAttributeNativeTypes(features.schema)
         Pair(buildFeatureEntry(it.geopackage), features)

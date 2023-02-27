@@ -73,7 +73,7 @@ See https://github.com/ben-lc/export-geopackage/blob/feat/add-documentation/gpkg
 
 | identifier | string | identifier of geopackage content | false
 | description | string | description of geopackage content | false
-| srid | Array<string> | srid of spatial data | true
+| crs | string | crs of spatial data, if not set source crs will be used, otherwise it will be reprojected to defined one | false
 |===
 
 .Sample json
@@ -98,7 +98,7 @@ See https://github.com/ben-lc/export-geopackage/blob/feat/add-documentation/gpkg
       },
       "geopackage": {
         "identifier": "stuff",
-        "srid": 4326,
+        "crs": "EPSG:4326",
         "description": "so much stuff"
       }
     },
@@ -110,7 +110,7 @@ See https://github.com/ben-lc/export-geopackage/blob/feat/add-documentation/gpkg
       },
       "geopackage": {
         "identifier": "another stuff",
-        "srid": 4326,
+        "crs": "EPSG:2154",
         "description": "so much other stuff"
       }
     }
