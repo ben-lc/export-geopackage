@@ -76,7 +76,10 @@ java {
   }
 }
 
-graalvmNative { metadataRepository { enabled.set(true) } }
+graalvmNative {
+  metadataRepository { enabled.set(true) }
+  binaries { named("main") { imageName.set("gpkg") } }
+}
 
 spotless {
   kotlin { ktfmt() }
@@ -95,6 +98,9 @@ tasks.named<ShadowJar>("shadowJar").configure {
     exclude(dependency("org.geotools:gt-geopkg:.*"))
     exclude(dependency("ch.qos.logback:logback-classic:.*"))
   }
+  archiveBaseName.set("gpkg")
+  archiveClassifier.set("")
+  archiveVersion.set("")
 }
 
 tasks.register<JavaExec>("generateManpageAsciiDoc").configure {
