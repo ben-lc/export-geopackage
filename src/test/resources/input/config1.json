@@ -16,7 +16,7 @@
       },
       "geopackage": {
         "identifier": "42",
-        "srid": 4326,
+        "crs": "EPSG:2154",
         "description": "some great data"
       }
     },
@@ -27,7 +27,7 @@
       },
       "geopackage": {
         "identifier": "rincevant",
-        "srid": 4326,
+        "crs": "EPSG:4326",
         "description": "another great table"
       }
     }

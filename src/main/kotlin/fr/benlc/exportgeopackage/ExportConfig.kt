@@ -51,7 +51,7 @@ data class ExportConfig(val datasource: DatasourceConfig, val contents: Set<Cont
   @Serializable
   data class GeopackageConfig(
       val identifier: String? = null,
-      val srid: Int,
+      val crs: String? = null,
       val description: String? = null
   )
 }

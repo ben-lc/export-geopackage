@@ -39,14 +39,14 @@ class PostgresqlDataSourceTest {
                 ContentConfig(
                     ExportConfig.SourceConfig(
                         tableName = "first_table", columns = setOf("name", "geom")),
-                    ExportConfig.GeopackageConfig(identifier = "toto", srid = 3615))))
+                    ExportConfig.GeopackageConfig(identifier = "toto", crs = "EPSG:2154"))))
     val actualFeatures = DataSource(config).fetchFeatures()
 
     val actualFirstFeature = actualFeatures.values.iterator().next().features().next()
 
     assertEquals("first one first table", actualFirstFeature.getAttribute("name"))
     assertEquals(
-        "POLYGON ((2.8649250704196603 46.249541520322815, 2.5362135416546447 45.45677308207745, 3.9751080142987703 45.44827211286614, 2.8649250704196603 46.249541520322815))",
+        "POLYGON ((689593.5624471236 6572194.591538024, 663752.0809851898 6484254.177736067, 776221.1733374989 6483674.291629725, 689593.5624471236 6572194.591538024))",
         actualFirstFeature.getAttribute("geom").toString())
   }
 }

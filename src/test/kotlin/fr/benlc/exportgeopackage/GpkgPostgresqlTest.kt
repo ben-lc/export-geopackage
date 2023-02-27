@@ -56,7 +56,7 @@ class GpkgPostgresqlTest {
                             setOf("first_table_id", "name", "some_bigint", "some_numeric", "geom"),
                         filter = "first_table_id = 2"),
                     ExportConfig.GeopackageConfig(
-                        description = "some great data", identifier = "42", srid = 4326)),
+                        description = "some great data", identifier = "42", crs = "EPSG:2154")),
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig(
                         tableName = "second_table",
@@ -64,7 +64,7 @@ class GpkgPostgresqlTest {
                     ExportConfig.GeopackageConfig(
                         description = "another great table",
                         identifier = "rincevant",
-                        srid = 4326))))
+                        crs = "EPSG:4326"))))
 
     // replace config to set dynamic db connection data from testcontainers
     every { gpkg.config } returns config
@@ -84,7 +84,7 @@ class GpkgPostgresqlTest {
     assertEquals("geom", actualFirstFeatureEntry.geometryColumn)
     assertEquals("42", actualFirstFeatureEntry.identifier)
     assertEquals(Geometries.GEOMETRY, actualFirstFeatureEntry.geometryType)
-    assertEquals(4326, actualFirstFeatureEntry.srid)
+    assertEquals(2154, actualFirstFeatureEntry.srid)
     assertEquals("some great data", actualFirstFeatureEntry.description)
     assertEquals(Entry.DataType.Feature, actualFirstFeatureEntry.dataType)
 

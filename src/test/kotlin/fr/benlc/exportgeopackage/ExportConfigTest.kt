@@ -30,7 +30,7 @@ class ExportConfigTest {
                   },
                   "geopackage": {
                     "identifier": "42",
-                    "srid": 3615,
+                    "crs": "EPSG:3615",
                     "description": "some great data"
                   }
                 },
@@ -42,7 +42,7 @@ class ExportConfigTest {
                   },
                   "geopackage": {
                     "identifier": "xzf",
-                    "srid": 3617,
+                    "crs": "EPSG:3617",
                     "description": "another great table"
                   }
                 }
@@ -58,10 +58,10 @@ class ExportConfigTest {
             setOf(
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig("first_table", setOf("col1", "col2"), "col1='toto'"),
-                    ExportConfig.GeopackageConfig("42", 3615, "some great data")),
+                    ExportConfig.GeopackageConfig("42", "EPSG:3615", "some great data")),
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig("second_table", setOf("cola", "colb"), "cola='bar'"),
-                    ExportConfig.GeopackageConfig("xzf", 3617, "another great table"))))
+                    ExportConfig.GeopackageConfig("xzf", "EPSG:3617", "another great table"))))
 
     assertEquals(expected, Json.decodeFromString(configJson))
   }
