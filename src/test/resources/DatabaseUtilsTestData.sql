@@ -4,6 +4,8 @@ CREATE TABLE test.first_table
 (
     first_table_id   varchar(15),
     name varchar(150) NOT NULL,
+    some_bigint   bigint,
+    some_numeric  numeric,
     geom geometry(GEOMETRY)
 );
 
@@ -16,9 +18,9 @@ CREATE TABLE test.second_table
 );
 
 INSERT INTO test.first_table
-VALUES (1, 'first one first table',
+VALUES (1, 'first one first table', 123456789, 123456789.123456789,
         'SRID=4326;POLYGON ((2.8649250704196603 46.249541520322815, 2.5362135416546447 45.45677308207745, 3.9751080142987703 45.44827211286614, 2.8649250704196603 46.249541520322815))'),
-       (2, 'second one first table',
+       (2, 'second one first table', 123456789, 123456789.123456789,
         'SRID=4326;POLYGON ((7.218663993821968 48.310755094714324, 6.841012248378121 47.818984711306086, 7.38539131055455 47.43194071673138, 7.218663993821968 48.310755094714324))')
 ;
 
