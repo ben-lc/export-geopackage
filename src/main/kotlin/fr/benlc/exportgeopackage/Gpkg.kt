@@ -21,6 +21,13 @@ class Gpkg : Callable<Int> {
   @Option(names = ["-v", "--verbose"], description = ["Verbose mode. Helpful for troubleshooting."])
   var verboseMode: Boolean = false
 
+  @Option(
+      names = ["--dry-run"],
+      description =
+          [
+              "Dry run checks input parameters,  database connection and gpkg file creation without doing the export."])
+  var dryRun: Boolean = false
+
   @Parameters(
       description = ["The GeoPackage output file."],
       paramLabel = "FILE",
@@ -39,15 +46,34 @@ class Gpkg : Callable<Int> {
 
   override fun call(): Int {
     configureLogger(verboseMode)
+    if (dryRun) return dryRun()
+
     return try {
       val dataSource = DataSource(config)
       val geoPkg = createGeoPackage(dataSource.fetchFeatures())
       geoPkg.file.copyTo(saveFile, true)
-      logger.info { "Export finished." }
+      logger.info { "Geopackage export succeed." }
       0
     } catch (e: Exception) {
       if (verboseMode) logger.error(e) { e.message } else logger.error { e.message }
-      logger.error { "Export failed." }
+      logger.error { "Geopackage export failed." }
+      1
+    }
+  }
+  private fun dryRun(): Int {
+    return try {
+      logger.info { "Try to create gpkg file." }
+      createTempFile().copyTo(saveFile)
+      saveFile.delete()
+      logger.info { "File creation succeed." }
+      logger.info { "Try to connect to database." }
+      DataSource(config)
+      logger.info { "Connection succeed." }
+      logger.info { "Dry run succeed." }
+      0
+    } catch (e: Exception) {
+      if (verboseMode) logger.error(e) { e.message } else logger.error { e.message }
+      logger.error { "Dry run failed." }
       1
     }
   }

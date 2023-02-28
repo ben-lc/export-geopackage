@@ -19,7 +19,7 @@ gpkg - gpkg is a basic CLI tool used to export spatial data into geopackage.
 // tag::picocli-generated-man-section-synopsis[]
 == Synopsis
 
-*gpkg* [*-hvV*] _FILE_ _JSON_
+*gpkg* [*-hvV*] [*--dry-run*] _FILE_ _JSON_
 
 // end::picocli-generated-man-section-synopsis[]
 
@@ -32,6 +32,9 @@ gpkg is a basic CLI tool used to export spatial data into geopackage.
 
 // tag::picocli-generated-man-section-options[]
 == Options
+
+*--dry-run*::
+  Dry run checks input parameters,  database connection and gpkg file creation without doing the export.
 
 *-h*, *--help*::
   Show this help message and exit.

@@ -3,6 +3,7 @@ package fr.benlc.exportgeopackage
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import mu.KotlinLogging
 import org.geotools.data.simple.SimpleFeatureCollection
 import org.geotools.geopkg.Entry
 import org.geotools.geopkg.FeatureEntry
@@ -10,13 +11,18 @@ import org.geotools.geopkg.GeoPackage
 import org.geotools.jdbc.JDBCDataStore.JDBC_NATIVE_TYPENAME
 import org.opengis.feature.simple.SimpleFeatureType
 
+private val logger = KotlinLogging.logger {}
+
 fun createGeoPackage(features: Map<FeatureEntry, SimpleFeatureCollection>) =
     GeoPackage(createTempFile()).apply {
       init()
-      features.entries.forEach { add(it.key, it.value) }
+      features.entries.forEach {
+        logger.info { "Start fetching features in ${it.value.schema.typeName} ..." }
+        add(it.key, it.value)
+      }
     }
 
-private fun createTempFile() =
+internal fun createTempFile() =
     File.createTempFile(
         DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSS").format(LocalDateTime.now()), ".gpkg")
 
