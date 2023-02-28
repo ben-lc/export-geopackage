@@ -75,7 +75,7 @@ class GpkgPostgresqlTest {
         cmd.execute("src/test/resources/output/test.gpkg", "src/test/resources/input/config1.json")
 
     assertEquals(0, exitCode)
-    assertEquals("src/test/resources/output/test.gpkg", gpkg.savePath)
+    assertEquals(File("src/test/resources/output/test.gpkg"), gpkg.saveFile)
 
     val gpkg = GeoPackage(File("src/test/resources/output/test.gpkg"))
 

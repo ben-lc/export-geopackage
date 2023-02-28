@@ -1,6 +1,7 @@
 package fr.benlc.exportgeopackage
 
 import fr.benlc.exportgeopackage.picocli.ExportConfigConverter
+import fr.benlc.exportgeopackage.picocli.SaveFileConverter
 import java.io.File
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -20,8 +21,11 @@ class Gpkg : Callable<Int> {
   @Option(names = ["-v", "--verbose"], description = ["Verbose mode. Helpful for troubleshooting."])
   var verboseMode: Boolean = false
 
-  @Parameters(description = ["The GeoPackage output file."], paramLabel = "FILE")
-  lateinit var savePath: String
+  @Parameters(
+      description = ["The GeoPackage output file."],
+      paramLabel = "FILE",
+      converter = [SaveFileConverter::class])
+  lateinit var saveFile: File
 
   @Parameters(
       description =
@@ -38,7 +42,7 @@ class Gpkg : Callable<Int> {
     return try {
       val dataSource = DataSource(config)
       val geoPkg = createGeoPackage(dataSource.fetchFeatures())
-      geoPkg.file.copyTo(File(savePath), true)
+      geoPkg.file.copyTo(saveFile, true)
       logger.info { "Export finished." }
       0
     } catch (e: Exception) {
