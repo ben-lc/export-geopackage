@@ -5,8 +5,11 @@ import org.geotools.data.DataStoreFinder
 import org.geotools.data.Query
 import org.geotools.data.simple.SimpleFeatureCollection
 import org.geotools.filter.text.cql2.CQL
+import org.geotools.geopkg.Entry
 import org.geotools.geopkg.FeatureEntry
+import org.geotools.jdbc.JDBCDataStore
 import org.geotools.referencing.CRS
+import org.opengis.feature.simple.SimpleFeatureType
 import org.opengis.filter.Filter
 
 class DataSource(config: ExportConfig) {
@@ -47,4 +50,24 @@ class DataSource(config: ExportConfig) {
         fixAttributeNativeTypes(features.schema)
         Pair(buildFeatureEntry(it.geopackage), features)
       }
+
+  private fun buildFeatureEntry(geopkgConfig: ExportConfig.GeopackageConfig) =
+      FeatureEntry().apply {
+        dataType = Entry.DataType.Feature
+        description = geopkgConfig.description
+        identifier = geopkgConfig.identifier
+      }
+
+  /**
+   * Changes source database native type name in order to avoid wrong geopackage SQLite type used by
+   * geotools. For example geopackage specifies usage of TEXT type for string data, but geotools
+   * will use VARCHAR if source db used VARCHAR.
+   */
+  private fun fixAttributeNativeTypes(featureType: SimpleFeatureType) {
+    featureType.attributeDescriptors.forEach {
+      when (it.userData[JDBCDataStore.JDBC_NATIVE_TYPENAME]) {
+        "varchar" -> it.userData[JDBCDataStore.JDBC_NATIVE_TYPENAME] = "text"
+      }
+    }
+  }
 }

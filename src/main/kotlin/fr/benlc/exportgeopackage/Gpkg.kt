@@ -1,11 +1,24 @@
 package fr.benlc.exportgeopackage
 
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
+import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.ConsoleAppender
 import fr.benlc.exportgeopackage.picocli.ExportConfigConverter
 import fr.benlc.exportgeopackage.picocli.SaveFileConverter
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 import mu.KotlinLogging
+import org.geotools.data.simple.SimpleFeatureCollection
+import org.geotools.geopkg.FeatureEntry
+import org.geotools.geopkg.GeoPackage
+import org.geotools.util.logging.Logging
+import org.slf4j.LoggerFactory
 import picocli.CommandLine
 import picocli.CommandLine.*
 
@@ -76,6 +89,43 @@ class Gpkg : Callable<Int> {
       logger.error { "Dry run failed." }
       1
     }
+  }
+
+  private fun createGeoPackage(features: Map<FeatureEntry, SimpleFeatureCollection>) =
+      GeoPackage(createTempFile()).apply {
+        init()
+        features.entries.forEach {
+          logger.info { "Start fetching features in ${it.value.schema.typeName} ..." }
+          add(it.key, it.value)
+        }
+      }
+
+  private fun createTempFile() =
+      File.createTempFile(
+          DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSSSSS").format(LocalDateTime.now()), ".gpkg")
+
+  private fun configureLogger(verboseMode: Boolean) {
+    Logging.ALL.setLoggerFactory("org.geotools.util.logging.LogbackLoggerFactory")
+    val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
+    if (!verboseMode) {
+      rootLogger.addAppender(buildAppender())
+      rootLogger.detachAppender("console")
+    }
+    rootLogger.level = if (verboseMode) Level.DEBUG else Level.INFO
+    rootLogger.isAdditive = false
+  }
+
+  private fun buildAppender(): ConsoleAppender<ILoggingEvent> {
+    val lc = LoggerFactory.getILoggerFactory() as LoggerContext
+    val ple = PatternLayoutEncoder()
+    ple.context = lc
+    ple.pattern = "%msg %n"
+    val appender = ConsoleAppender<ILoggingEvent>()
+    appender.encoder = ple
+    ple.start()
+    appender.context = lc
+    appender.start()
+    return appender
   }
 
   companion object {
