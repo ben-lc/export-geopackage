@@ -2,22 +2,22 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm") version "1.8.10"
-  kotlin("kapt") version "1.8.10"
-  kotlin("plugin.serialization") version "1.8.10"
-  id("com.diffplug.spotless") version "6.15.0"
-  id("com.github.ben-manes.versions") version "0.46.0"
-  id("pl.allegro.tech.build.axion-release") version "1.14.4"
+  kotlin("jvm") version "1.8.22"
+  kotlin("kapt") version "1.8.22"
+  kotlin("plugin.serialization") version "1.8.22"
+  id("com.diffplug.spotless") version "6.19.0"
+  id("com.github.ben-manes.versions") version "0.47.0"
+  id("pl.allegro.tech.build.axion-release") version "1.15.3"
   application
-  id("com.github.johnrengelman.shadow") version ("7.1.2")
-  id("org.graalvm.buildtools.native") version ("0.9.20")
+  id("com.github.johnrengelman.shadow") version ("8.1.1")
+  id("org.graalvm.buildtools.native") version ("0.9.23")
 }
 
 application { mainClass.set("fr.benlc.exportgeopackage.Gpkg") }
 
 tasks.wrapper {
   distributionType = Wrapper.DistributionType.ALL
-  gradleVersion = "8.0.1"
+  gradleVersion = "8.1.1"
 }
 
 group = "fr.benlc"
@@ -29,21 +29,21 @@ repositories {
   mavenCentral()
 }
 
-extra["geotoolsVersion"] = "28.2"
+extra["geotoolsVersion"] = "29.1"
 
-extra["picocliVersion"] = "4.7.1"
+extra["picocliVersion"] = "4.7.4"
 
-extra["testcontainersVersion"] = "1.17.6"
+extra["testcontainersVersion"] = "1.18.3"
 
 extra["junitVersion"] = "5.9.2"
 
-extra["kotlinxSerializationJsonVersion"] = "1.4.1"
+extra["kotlinxSerializationJsonVersion"] = "1.5.1"
 
-extra["mockkVersion"] = "1.13.4"
+extra["mockkVersion"] = "1.13.5"
 
 extra["kotlinLoggingVersion"] = "3.0.4"
 
-extra["logbackVersion"] = "1.4.5"
+extra["logbackVersion"] = "1.4.8"
 
 dependencies {
   implementation("info.picocli:picocli:${property("picocliVersion")}")

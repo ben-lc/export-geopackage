@@ -94,6 +94,7 @@ class Gpkg : Callable<Int> {
       1
     }
   }
+
   private fun batchExport(): Int {
     val configFiles = batchFolder?.listFiles { _, name -> name.endsWith(".json") }
 
@@ -111,6 +112,7 @@ class Gpkg : Callable<Int> {
         .contains(1)
         .let { hasError -> if (hasError) 1 else 0 }
   }
+
   private fun dryRun(): Int {
     return try {
       logger.info { "Try to create gpkg file." }

@@ -38,10 +38,12 @@ class GpkgPostgresqlTest {
   }
 
   @SpyK(recordPrivateCalls = true) var gpkg = Gpkg()
+
   @AfterEach
   fun tearDown() {
     File("src/test/resources/output").deleteRecursively()
   }
+
   @Test
   internal fun `gpkg command correctly parses params and creates valid single geopackage with -c option`() {
 
