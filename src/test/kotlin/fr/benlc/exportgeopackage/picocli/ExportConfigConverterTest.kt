@@ -39,6 +39,7 @@ class ExportConfigConverterTest {
 
     assertEquals(expected, actual)
   }
+
   @Test
   fun `convert returns error if file path is invalid`() {
     val exception =

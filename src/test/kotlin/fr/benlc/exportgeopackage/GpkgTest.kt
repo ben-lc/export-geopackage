@@ -10,6 +10,7 @@ import picocli.CommandLine
 class GpkgTest {
 
   @SpyK(recordPrivateCalls = true) var gpkg = Gpkg()
+
   @Test
   fun `gpkg shows help message when called with --help or -h option`() {
     val cmd = CommandLine(gpkg)
