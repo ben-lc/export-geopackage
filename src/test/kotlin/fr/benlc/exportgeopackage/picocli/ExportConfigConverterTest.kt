@@ -22,13 +22,14 @@ class ExportConfigConverterTest {
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig(
                         tableName = "first_table",
-                        columns = setOf("id", "name", "geom"),
-                        filter = "id = 2"),
+                        columns = setOf("first_table_id", "name", "geom"),
+                        filter = "first_table_id = 2"),
                     ExportConfig.GeopackageConfig(
                         description = "some great data", identifier = "42", crs = "EPSG:2154")),
                 ExportConfig.ContentConfig(
                     ExportConfig.SourceConfig(
-                        tableName = "second_table", columns = setOf("id", "description", "geom")),
+                        tableName = "second_table",
+                        columns = setOf("second_table_id", "description", "geom")),
                     ExportConfig.GeopackageConfig(
                         description = "another great table",
                         identifier = "rincevant",

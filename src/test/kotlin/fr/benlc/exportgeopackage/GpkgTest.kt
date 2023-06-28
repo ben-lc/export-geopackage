@@ -17,16 +17,19 @@ class GpkgTest {
     cmd.out = PrintWriter(sw)
 
     val expected =
-        """Usage: gpkg [-hvV] [--dry-run] FILE JSON
+        """Usage: gpkg [-hvV] [--dry-run] [-b=FOLDER] [-c=JSON] FILE
 gpkg is a basic CLI tool used to export spatial data into geopackage.
-      FILE        The GeoPackage output file.
-      JSON        JSON file containing export configuration (see https://github.
-                    com/ben-lc/export-geopackage/README.adoc).
-      --dry-run   Dry run checks input parameters,  database connection and
-                    gpkg file creation without doing the export.
-  -h, --help      Show this help message and exit.
-  -v, --verbose   Verbose mode. Helpful for troubleshooting.
-  -V, --version   Print version information and exit."""
+      FILE             The GeoPackage output file or folder.
+  -b, --batch=FOLDER   Batch mode. Process all JSON config files in given
+                         folder. Name of the JSON file will be used as
+                         geopackage file name.
+  -c, --config=JSON    JSON file containing export configuration (see https:
+                         //github.com/ben-lc/export-geopackage/README.adoc).
+      --dry-run        Dry run checks input parameters,  database connection
+                         and gpkg file creation without doing the export.
+  -h, --help           Show this help message and exit.
+  -v, --verbose        Verbose mode. Helpful for troubleshooting.
+  -V, --version        Print version information and exit."""
             .trimIndent()
 
     assertEquals(0, cmd.execute("--help"))

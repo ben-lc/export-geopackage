@@ -70,4 +70,8 @@ class DataSource(config: ExportConfig) {
       }
     }
   }
+
+  fun dispose() {
+    dataStore.dispose()
+  }
 }

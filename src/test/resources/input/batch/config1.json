@@ -19,17 +19,6 @@
         "crs": "EPSG:2154",
         "description": "some great data"
       }
-    },
-    {
-      "source": {
-        "tableName": "second_table",
-        "columns": ["second_table_id", "description", "geom"]
-      },
-      "geopackage": {
-        "identifier": "rincevant",
-        "crs": "EPSG:4326",
-        "description": "another great table"
-      }
     }
   ]
 }

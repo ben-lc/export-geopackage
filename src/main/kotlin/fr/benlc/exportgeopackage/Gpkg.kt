@@ -7,7 +7,6 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.ConsoleAppender
 import fr.benlc.exportgeopackage.picocli.ExportConfigConverter
-import fr.benlc.exportgeopackage.picocli.SaveFileConverter
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -41,46 +40,86 @@ class Gpkg : Callable<Int> {
               "Dry run checks input parameters,  database connection and gpkg file creation without doing the export."])
   var dryRun: Boolean = false
 
-  @Parameters(
-      description = ["The GeoPackage output file."],
-      paramLabel = "FILE",
-      converter = [SaveFileConverter::class])
-  lateinit var saveFile: File
+  @Option(
+      names = ["-b", "--batch"],
+      description =
+          [
+              "Batch mode. Process all JSON config files in given folder. Name of the JSON file will be used as geopackage file name."],
+      paramLabel = "FOLDER")
+  var batchFolder: File? = null
 
-  @Parameters(
+  @Option(
+      names = ["-c", "--config"],
       description =
           [
               "JSON file containing export configuration (see https://github.com/ben-lc/export-geopackage/README.adoc)."],
       paramLabel = "JSON",
       converter = [ExportConfigConverter::class])
-  lateinit var config: ExportConfig
+  var config: ExportConfig? = null
+    get() = field
+
+  @Parameters(description = ["The GeoPackage output file or folder."], paramLabel = "FILE")
+  lateinit var exportFilename: String
 
   @Spec lateinit var spec: Model.CommandSpec
 
   override fun call(): Int {
     configureLogger(verboseMode)
-    if (dryRun) return dryRun()
+    return when {
+      dryRun -> dryRun()
+      batchFolder != null -> batchExport()
+      config != null -> {
+        val exportFile =
+            File(if (exportFilename.endsWith(".gpkg")) exportFilename else "$exportFilename.gpkg")
+        export(config!!, exportFile)
+      }
+      else -> {
+        logger.error { "You must provide a config file or a config folder. See 'gpkg --help'" }
+        1
+      }
+    }
+  }
 
+  private fun export(config: ExportConfig, exportFile: File): Int {
     return try {
       val dataSource = DataSource(config)
       val geoPkg = createGeoPackage(dataSource.fetchFeatures())
-      geoPkg.file.copyTo(saveFile, true)
-      logger.info { "Geopackage export succeed." }
+      dataSource.dispose()
+      geoPkg.file.copyTo(exportFile, true)
+      logger.info { "${exportFile.name} export succeed." }
       0
     } catch (e: Exception) {
       if (verboseMode) logger.error(e) { e.message } else logger.error { e.message }
-      logger.error { "Geopackage export failed." }
+      logger.error { "${exportFile.name} export failed." }
       1
     }
+  }
+  private fun batchExport(): Int {
+    val configFiles = batchFolder?.listFiles { _, name -> name.endsWith(".json") }
+
+    if (configFiles.isNullOrEmpty()) {
+      logger.error { "No JSON config files found in given folder." }
+      return 1
+    }
+
+    return configFiles
+        .associateWith { ExportConfigConverter().convert(it.absolutePath) }
+        .map {
+          val filename = File(exportFilename, it.key.name.replace(".json", ".gpkg"))
+          export(it.value, filename)
+        }
+        .contains(1)
+        .let { hasError -> if (hasError) 1 else 0 }
   }
   private fun dryRun(): Int {
     return try {
       logger.info { "Try to create gpkg file." }
-      createTempFile().copyTo(saveFile)
-      saveFile.delete()
+      val file = File(exportFilename)
+      createTempFile().copyTo(file)
+      file.delete()
       logger.info { "File creation succeed." }
       logger.info { "Try to connect to database." }
-      DataSource(config)
+      DataSource(config!!)
       logger.info { "Connection succeed." }
       logger.info { "Dry run succeed." }
       0
