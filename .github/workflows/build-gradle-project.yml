@@ -1,18 +1,22 @@
-name: Build Gradle project
-
+name: Run Gradle on push
 on:
   push:
-
 jobs:
-  build-gradle-project:
-    runs-on: ubuntu-latest
+  gradle:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: graalvm/setup-graalvm@v1
         with:
           version: 'latest'
-          java-version: 17
+          java-version: '17'
+          distribution: 'graalvm-community'
           components: 'native-image'
           github-token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: gradle/gradle-build-action@v2
-      - run: ./gradlew build
+      - name: Setup and execute Gradle 'build' task
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
